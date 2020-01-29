@@ -4,7 +4,10 @@ import { NavigationStackProp } from 'react-navigation-stack';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { Button, Surface, TextInput } from 'react-native-paper';
-import { RootRoutes } from '../../common/constants/routes';
+import { useMutation } from "@apollo/react-hooks";
+import { SIGN_IN } from "../../graphql/mutations/auth.mutations";
+import { LOG_IN } from "../../graphql/local";
+import { RootRoutes, AuthRoutes } from '../../common/constants/routes';
 import { Buttons, Common, Spacing, Typography } from '../../styles';
 
 type Props = {
@@ -14,8 +17,38 @@ type Props = {
 export function LoginScreen(props: Props) {
     const { navigation } = props;
 
+    const [signIn, { data }] = useMutation(SIGN_IN);
+    const [changeStatus] = useMutation(LOG_IN);
     const [email, setEmail] = useState<string>();
     const [password, setPassword] = useState<string>();
+
+    const getRecord = (data: any) => {
+        const {
+            auth: {
+                signIn: { record }
+            }
+        } = data;
+        return record;
+    };
+
+    useEffect(() => {
+        if (data && email) {
+            const record = getRecord(data);
+            if (record) {
+                AsyncStorage.setItem("accessToken", record.accessToken);
+                AsyncStorage.setItem('email', email);
+                changeStatus({
+                    variables: {
+                        status: true
+                    }
+                });
+                navigation.navigate(RootRoutes.Home);
+            } else {
+                console.log("Wrong password");
+                navigation.navigate(AuthRoutes.Login);
+            }
+        }
+    }, [data]);
 
     return (
         <KeyboardAwareScrollView
@@ -62,16 +95,10 @@ export function LoginScreen(props: Props) {
 
     async function login(): Promise<void> {
         if (email) {
-            await setUser({ accessToken: '123', userId: email });
-            navigation.navigate(RootRoutes.Home);
+            signIn({ variables: { login: email, password } });
         } else {
             await AsyncStorage.clear();
         }
-    }
-
-    async function setUser({ accessToken, userId }: { accessToken: string; userId: string }): Promise<void> {
-        await AsyncStorage.setItem('accessToken', accessToken);
-        await AsyncStorage.setItem('email', userId);
     }
 }
 

@@ -1,29 +1,97 @@
 import { LoginScreen } from './views/login/Login';
 import { AuthRoutes, RootRoutes } from './common/constants/routes';
-import { createStackNavigator } from 'react-navigation-stack';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { HomeScreen } from './views/home/Home';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { AsyncStorage } from 'react-native';
+import { ApolloProvider } from "@apollo/react-hooks";
+import { InMemoryCache } from "apollo-cache-inmemory";
+import { ApolloLink, Observable } from "apollo-link";
+import { ApolloClient } from "apollo-client";
 import { Provider as PaperProvider } from 'react-native-paper';
-import { FailScreen } from './views/fail/Fail';
+import { LoadingScreen } from './views/loading/Loading';
+import { HttpLink } from "apollo-link-http";
+import { onError } from "apollo-link-error";
+import { typeDefs, resolvers } from "./graphql/local";
 
-const AuthStack = createStackNavigator({
-  [AuthRoutes.Login]: { screen: LoginScreen, navigationOptions: { header: null } },
+const cache = new InMemoryCache();
+
+const request = async (operation: any) => {
+  if (
+    operation.operationName !== "SignIn" &&
+    operation.operationName !== "SignUp"
+  ) {
+    const token = AsyncStorage.getItem("token");
+    operation.setContext({
+      headers: {
+        authorization: token ? `Bearer ${token}` : ""
+      }
+    });
+  }
+};
+
+const requestLink = new ApolloLink(
+  (operation, forward) =>
+    new Observable(observer => {
+      let handle: any;
+      Promise.resolve(operation)
+        .then(oper => request(oper))
+        .then(() => {
+          handle = forward(operation).subscribe({
+            next: observer.next.bind(observer),
+            error: observer.error.bind(observer),
+            complete: observer.complete.bind(observer)
+          });
+        })
+        .catch(observer.error.bind(observer));
+      return () => {
+        if (handle) handle.unsubscribe();
+      };
+    })
+);
+
+const client = new ApolloClient({
+  link: ApolloLink.from([
+    onError(({ graphQLErrors, networkError }) => {
+      console.log(graphQLErrors, networkError);
+      const msg = graphQLErrors && (graphQLErrors[0].message as any);
+      if (msg && msg.statusCode === 401) {
+        AsyncStorage.clear();
+        const data = { isLoggedIn: false };
+        cache.writeData({ data });
+      }
+    }),
+    requestLink,
+    new HttpLink({
+      uri: "http://192.168.1.118:8080/graphql"
+    })
+  ]),
+  cache,
+  typeDefs,
+  resolvers
+});
+
+cache.writeData({
+  data: {
+    isLoggedIn: !!AsyncStorage.getItem("token")
+  }
 });
 
 const RootStack = createSwitchNavigator({
+  [AuthRoutes.Loading]: { screen: LoadingScreen, navigationOptions: { header: null } },
   [RootRoutes.Home]: { screen: HomeScreen, navigationOptions: { header: null } },
-  [AuthRoutes.Login]: { screen: AuthStack, navigationOptions: { header: null } },
-  [AuthRoutes.Fail]: { screen: FailScreen, navigationOptions: { header: null, gesturesEnabled: false } },
+  [AuthRoutes.Login]: { screen: LoginScreen, navigationOptions: { header: null } },
 });
 
 const App = createAppContainer(RootStack);
 
 function Main() {
   return (
-    <PaperProvider>
-      <App />
-    </PaperProvider>
+    <ApolloProvider client={client}>
+      <PaperProvider>
+        <App />
+      </PaperProvider>
+    </ApolloProvider>
   );
 }
 
