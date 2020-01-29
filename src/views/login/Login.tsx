@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { AsyncStorage, StyleSheet, Text } from 'react-native';
+import { AsyncStorage, StyleSheet, Text, Alert } from 'react-native';
 import { NavigationStackProp } from 'react-navigation-stack';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
@@ -44,7 +44,7 @@ export function LoginScreen(props: Props) {
                 });
                 navigation.navigate(RootRoutes.Home);
             } else {
-                console.log("Wrong password");
+                Alert.alert("Wrong password");
                 navigation.navigate(AuthRoutes.Login);
             }
         }
@@ -87,7 +87,15 @@ export function LoginScreen(props: Props) {
                     mode='contained'
                     onPress={() => (login())}
                 >
-                    <Text style={styles.continueButtonText}>Continue</Text>
+                    <Text style={styles.continueButtonText}>Log In</Text>
+                </Button>
+                <Button
+                    uppercase={false}
+                    style={styles.continueButton}
+                    mode='contained'
+                    onPress={() => (navigation.navigate(AuthRoutes.Register))}
+                >
+                    <Text style={styles.continueButtonText}>Registration</Text>
                 </Button>
             </Surface>
         </KeyboardAwareScrollView>

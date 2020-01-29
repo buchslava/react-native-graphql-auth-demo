@@ -13,10 +13,13 @@ export function LoadingScreen({ navigation }: Props) {
     const { loading, data } = useQuery(CHECK_LOGGED_STATUS);
 
     useEffect(() => {
-        if (!loading && !data.isLoggedIn) {
-            navigation.navigate(AuthRoutes.Login);
-        } else {
-            navigation.navigate(RootRoutes.Home);
+        if (!loading) {
+            if (data.isLoggedIn) {
+                console.log(data);
+                navigation.navigate(RootRoutes.Home);
+            } else {
+                navigation.navigate(AuthRoutes.Login);
+            }
         }
     }, [loading, data]);
 

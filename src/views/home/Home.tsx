@@ -9,33 +9,14 @@ type Props = {
 };
 
 export function HomeScreen({ navigation }: Props) {
-    const [email, setEmail] = useState<string>('foo');
-    useEffect(() => {
-        bootstrapAsync();
-    }, []);
-
-    async function bootstrapAsync() {
-        const accessToken = await AsyncStorage.getItem('accessToken');
-        const email = await AsyncStorage.getItem('email');
-        if (accessToken && email) {
-            setEmail(email);
-        } else {
-            navigation.navigate(AuthRoutes.Login);
-        }
-    }
-
     const logOut = async () => {
-        await clearUser();
-        navigation.navigate(AuthRoutes.Login);
-    };
-
-    const clearUser = async () => {
         await AsyncStorage.clear();
+        navigation.navigate(AuthRoutes.Login);
     };
 
     return (
         <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ color: 'black', fontSize: 20, ...Typography.regular }}>Hello, {email}!</Text>
+            <Text style={{ color: 'black', fontSize: 20, ...Typography.regular }}>Hello!</Text>
             <Button title={'Logout'} onPress={() => (logOut())}><Text>Logout</Text></Button>
         </View>
     );

@@ -1,4 +1,5 @@
 import gql from "graphql-tag";
+import { AsyncStorage } from 'react-native';
 
 export const typeDefs = gql`
   extend type Query {
@@ -12,8 +13,8 @@ export const typeDefs = gql`
 
 export const resolvers = {
   Query: {
-    isLoggedIn: () => {
-      return !!localStorage.getItem("token");
+    isLoggedIn: async () => {
+      return !!await AsyncStorage.getItem("accessToken");
     }
   },
   Mutation: {

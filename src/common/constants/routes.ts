@@ -6,6 +6,7 @@ export enum RootRoutes {
 
 export enum AuthRoutes {
     Login = 'Login',
+    Register = 'Register',
     Loading = 'Loading',
     Fail = 'Fail',
 }

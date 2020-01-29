@@ -1,4 +1,5 @@
 import { LoginScreen } from './views/login/Login';
+import { RegisterScreen } from './views/register/Register';
 import { AuthRoutes, RootRoutes } from './common/constants/routes';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { HomeScreen } from './views/home/Home';
@@ -71,16 +72,19 @@ const client = new ApolloClient({
   resolvers
 });
 
-cache.writeData({
-  data: {
-    isLoggedIn: !!AsyncStorage.getItem("token")
-  }
-});
+(async () => {
+  cache.writeData({
+    data: {
+      isLoggedIn: !!await AsyncStorage.getItem("accessToken")
+    }
+  });
+})();
 
 const RootStack = createSwitchNavigator({
   [AuthRoutes.Loading]: { screen: LoadingScreen, navigationOptions: { header: null } },
   [RootRoutes.Home]: { screen: HomeScreen, navigationOptions: { header: null } },
   [AuthRoutes.Login]: { screen: LoginScreen, navigationOptions: { header: null } },
+  [AuthRoutes.Register]: { screen: RegisterScreen, navigationOptions: { header: null } },
 });
 
 const App = createAppContainer(RootStack);
