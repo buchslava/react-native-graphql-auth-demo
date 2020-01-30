@@ -22,7 +22,7 @@ const request = async (operation: any) => {
     operation.operationName !== "SignIn" &&
     operation.operationName !== "SignUp"
   ) {
-    const token = AsyncStorage.getItem("token");
+    const token = await AsyncStorage.getItem("accessToken");
     operation.setContext({
       headers: {
         authorization: token ? `Bearer ${token}` : ""
