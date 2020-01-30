@@ -38,7 +38,7 @@ export function RegisterScreen(props: Props) {
             const record = getRecord(data);
             if (record) {
                 AsyncStorage.setItem("accessToken", record.accessToken);
-                navigation.navigate(RootRoutes.Home);
+                navigation.navigate(RootRoutes.JokeList);
             } else {
                 Alert.alert("Such user exists. Change your login");
                 navigation.navigate(AuthRoutes.Login);

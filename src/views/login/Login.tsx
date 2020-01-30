@@ -42,7 +42,7 @@ export function LoginScreen(props: Props) {
                         status: true
                     }
                 });
-                navigation.navigate(RootRoutes.Home);
+                navigation.navigate(RootRoutes.JokeList);
             } else {
                 Alert.alert("Wrong password");
                 navigation.navigate(AuthRoutes.Login);

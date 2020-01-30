@@ -2,7 +2,7 @@ import { LoginScreen } from './views/login/Login';
 import { RegisterScreen } from './views/register/Register';
 import { AuthRoutes, RootRoutes } from './common/constants/routes';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
-import { HomeScreen } from './views/home/Home';
+import JokeListStack from './views/jokes';
 import React from 'react';
 import { AsyncStorage } from 'react-native';
 import { ApolloProvider } from "@apollo/react-hooks";
@@ -82,7 +82,7 @@ const client = new ApolloClient({
 
 const RootStack = createSwitchNavigator({
   [AuthRoutes.Loading]: { screen: LoadingScreen, navigationOptions: { header: null } },
-  [RootRoutes.Home]: { screen: HomeScreen, navigationOptions: { header: null } },
+  [RootRoutes.JokeList]: { screen: JokeListStack, navigationOptions: { header: null } },
   [AuthRoutes.Login]: { screen: LoginScreen, navigationOptions: { header: null } },
   [AuthRoutes.Register]: { screen: RegisterScreen, navigationOptions: { header: null } },
 });

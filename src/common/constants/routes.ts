@@ -1,7 +1,9 @@
 export enum RootRoutes {
     Success = 'Success',
     Fail = 'Fail',
-    Home = 'Home'
+    Home = 'Home',
+    JokeList = 'JokeList',
+    AddJoke = 'AddJoke'
 }
 
 export enum AuthRoutes {

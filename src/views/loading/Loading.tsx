@@ -15,8 +15,7 @@ export function LoadingScreen({ navigation }: Props) {
     useEffect(() => {
         if (!loading) {
             if (data.isLoggedIn) {
-                console.log(data);
-                navigation.navigate(RootRoutes.Home);
+                navigation.navigate(RootRoutes.JokeList);
             } else {
                 navigation.navigate(AuthRoutes.Login);
             }
