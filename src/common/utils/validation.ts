@@ -1,5 +1,5 @@
 import * as Yup from "yup";
-import { RegisterData } from "../../views/register";
+import { RegisterData } from "../../views/register/Register";
 import { Alert } from "react-native";
 
 export const RegisterSchema = Yup.object().shape({
