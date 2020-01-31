@@ -52,20 +52,23 @@ export function JokeListScreen({ navigation }: Props) {
         <Button style={styles.button} onPress={gotoAddJoke}><Text>Add new Joke</Text></Button>
         <Button style={styles.button} onPress={gotoMap}><Text>Map</Text></Button>
       </View>
-      <ScrollView style={styles.content}>
-        <Text style={styles.title}>Jokes list</Text>
-        <FlatList
-          contentContainerStyle={{
-            marginTop: 5,
-          }}
-          ListEmptyComponent={() => <Loader />}
-          data={dataForRender}
-          keyExtractor={(_, index) => index.toString()}
-          renderItem={({ item }: { item: IJoke }) => (
-            <View><Text>{item.author}: {item.joke}</Text></View>
-          )}
-        />
-      </ScrollView>
+      {
+        loading ? <Loader /> :
+          <ScrollView style={styles.content}>
+            <Text style={styles.title}>Jokes list</Text>
+            <FlatList
+              contentContainerStyle={{
+                marginTop: 5,
+              }}
+              ListEmptyComponent={() => <Loader />}
+              data={dataForRender}
+              keyExtractor={(_, index) => index.toString()}
+              renderItem={({ item }: { item: IJoke }) => (
+                <View><Text>{item.author}: {item.joke}</Text></View>
+              )}
+            />
+          </ScrollView>
+      }
     </View>
   );
 }
