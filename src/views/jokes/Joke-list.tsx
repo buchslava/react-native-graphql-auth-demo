@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { AsyncStorage, Text, View, Button, ScrollView, StyleSheet, FlatList } from 'react-native';
+import { AsyncStorage, Text, View, ScrollView, StyleSheet, FlatList } from 'react-native';
 import { useQuery } from "@apollo/react-hooks";
 import { GET_JOKES } from "../../graphql/queries/jokes.queries";
 import { Typography, Spacing } from '../../styles';
 import { AuthRoutes, RootRoutes } from '../../common/constants/routes';
 import { Loader } from '../loader/Loader';
 import { NavigationStackProp } from 'react-navigation-stack';
+import { Button } from 'react-native-paper';
 
 type Props = {
   navigation: NavigationStackProp;
@@ -39,19 +40,23 @@ export function JokeListScreen({ navigation }: Props) {
   };
   const gotoAddJoke = () => {
     navigation.navigate(RootRoutes.AddJoke);
-  }
+  };
+  const gotoMap = () => {
+    navigation.navigate(RootRoutes.Map);
+  };
 
   return (
     <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start' }}>
-      <View>
-        <Button title={'Logout'} onPress={logOut}><Text>Logout</Text></Button>
-        <Button title={'Add new Joke'} onPress={gotoAddJoke}><Text>Logout</Text></Button>
+      <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'flex-start', backgroundColor: '#eeeeee', width: '100%' }}>
+        <Button style={styles.button} onPress={logOut}><Text>Logout</Text></Button>
+        <Button style={styles.button} onPress={gotoAddJoke}><Text>Add new Joke</Text></Button>
+        <Button style={styles.button} onPress={gotoMap}><Text>Map</Text></Button>
       </View>
       <ScrollView style={styles.content}>
         <Text style={styles.title}>Jokes list</Text>
         <FlatList
           contentContainerStyle={{
-            marginTop: 15,
+            marginTop: 5,
           }}
           ListEmptyComponent={() => <Loader />}
           data={dataForRender}
@@ -68,4 +73,5 @@ export function JokeListScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   content: { padding: Spacing.base },
   title: { ...Typography.title, marginBottom: 24, color: '#444444' },
+  button: { marginRight: 10 }
 });
