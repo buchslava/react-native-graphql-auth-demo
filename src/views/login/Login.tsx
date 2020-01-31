@@ -56,9 +56,7 @@ export function LoginScreen(props: Props) {
             scrollEnabled
             contentContainerStyle={styles.container}
         >
-            <Text style={[{ ...Spacing.loginOrgMessageMargin }]}>
-                Login with email
-                </Text>
+            <Text style={[{ ...Spacing.loginOrgMessageMargin }]}>Login with email</Text>
             <Surface style={styles.loginCard}>
                 <TextInput
                     style={{ width: '100%', marginTop: Spacing.base }}
@@ -67,7 +65,7 @@ export function LoginScreen(props: Props) {
                     mode='outlined'
                     autoCompleteType='email'
                     keyboardType='email-address'
-                    onSubmitEditing={() => login()}
+                    onSubmitEditing={login}
                     value={email}
                     onChangeText={(text: string) => setEmail(text)}
                 />
@@ -77,7 +75,7 @@ export function LoginScreen(props: Props) {
                     secureTextEntry={true}
                     label='Password'
                     mode='outlined'
-                    onSubmitEditing={() => (login())}
+                    onSubmitEditing={login}
                     value={password}
                     onChangeText={(text: string) => setPassword(text)}
                 />
@@ -85,7 +83,7 @@ export function LoginScreen(props: Props) {
                     uppercase={false}
                     style={styles.continueButton}
                     mode='contained'
-                    onPress={() => (login())}
+                    onPress={login}
                 >
                     <Text style={styles.continueButtonText}>Log In</Text>
                 </Button>

@@ -3,7 +3,7 @@ import { AsyncStorage, Text, View, Button, ScrollView, StyleSheet, FlatList } fr
 import { useQuery } from "@apollo/react-hooks";
 import { GET_JOKES } from "../../graphql/queries/jokes.queries";
 import { Typography, Spacing } from '../../styles';
-import { AuthRoutes } from '../../common/constants/routes';
+import { AuthRoutes, RootRoutes } from '../../common/constants/routes';
 import { Loader } from '../loader/Loader';
 import { NavigationStackProp } from 'react-navigation-stack';
 
@@ -37,10 +37,16 @@ export function JokeListScreen({ navigation }: Props) {
     await AsyncStorage.clear();
     navigation.navigate(AuthRoutes.Login);
   };
+  const gotoAddJoke = () => {
+    navigation.navigate(RootRoutes.AddJoke);
+  }
 
   return (
     <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start' }}>
-      <View><Button title={'Logout'} onPress={logOut}><Text>Logout</Text></Button></View>
+      <View>
+        <Button title={'Logout'} onPress={logOut}><Text>Logout</Text></Button>
+        <Button title={'Add new Joke'} onPress={gotoAddJoke}><Text>Logout</Text></Button>
+      </View>
       <ScrollView style={styles.content}>
         <Text style={styles.title}>Jokes list</Text>
         <FlatList

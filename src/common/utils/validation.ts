@@ -11,7 +11,6 @@ export const RegisterSchema = Yup.object().shape({
 });
 
 export function passwordsEquals(data: RegisterData): boolean {
-    console.log(data);
     const result = data.password === data.passwordRepeat;
     if (!result) {
         Alert.alert("Passwords should be equal!");

@@ -6,7 +6,8 @@ export const SIGN_UP = gql`
       signUp(user: { login: $login, password: $password }) {
         record {
           accessToken
-        }
+        },
+        error
       }
     }
   }
@@ -18,7 +19,8 @@ export const SIGN_IN = gql`
       signIn(user: { login: $login, password: $password }) {
         record {
           accessToken
-        }
+        },
+        error
       }
     }
   }
